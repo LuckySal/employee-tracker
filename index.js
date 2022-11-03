@@ -4,7 +4,7 @@ const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const ctable = require("console.table");
 
-const connection = mysql.createConnection(
+const db = mysql.createConnection(
     {
         host: "localhost",
         user: process.env.DB_USER,
@@ -17,12 +17,13 @@ const connection = mysql.createConnection(
 async function init() {
     let programEnd = false;
     do {
-        programEnd = await selectOptions()
+        programEnd = await selectOptions();
     } while (!programEnd);
 };
 
 async function selectOptions() {
     return new Promise((resolve, reject) => {
+        let programEnd = false;
         const questions = [
             {
                 type: "list",
@@ -37,44 +38,80 @@ async function selectOptions() {
                     "Add a role",
                     "Add an employee",
                     new inquirer.Separator(),
-                    "Update an employee role"
-                ]
+                    "Update an employee role",
+                    new inquirer.Separator(),
+                    "Quit"
+                ],
+                loop: false
             }
         ]
         inquirer
             .prompt(questions)
             .then(async ({ choice }) => {
-                let programEnd = false;
                 switch (choice) {
                     case "View all departments":
-                        programEnd = await viewDepartments();
+                        await viewDepartments();
                         break;
                     case "View all roles":
-                        programEnd = await viewRoles();
+                        await viewRoles();
                         break;
                     case "View all employees":
-                        programEnd = await viewEmployees();
+                        await viewEmployees();
                         break;
                     case "Add a department":
-                        programEnd = await addDepartment();
+                        await addDepartment();
                         break;
                     case "Add a role":
-                        programEnd = await addRole();
+                        await addRole();
                         break;
                     case "Add an employee":
-                        programEnd = await addEmployee();
+                        await addEmployee();
                         break;
                     case "Update an employee role":
-                        programEnd = await updateEmployeeRole();
+                        await updateEmployeeRole();
+                        break;
+                    case "Quit":
+                        programEnd = true;
                         break;
                     default:
                         throw new Error("Something weird happened");
                 }
             })
-            .catch(() => reject(error))
-        resolve()
+            .then(() => {
+                resolve(programEnd);
+            })
+            .catch((err) => reject(err))
         
     })
-}
+};
+
+async function viewDepartments() {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM departments`;
+        db.query(query, (err, results) => {
+            err ? reject(err) : resolve(console.table(results));
+        })
+    })
+};
+async function viewRoles() {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM roles`;
+        db.query(query, (err, results) => {
+            err ? reject(err) : resolve(console.table(results));
+        })
+    })
+};
+async function viewEmployees() {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM employees`
+        db.query(query, (err, results) => {
+            err ? reject(err) : resolve(console.table(results));
+        })
+    })
+};
+async function addDepartment() { };
+async function addRole() { };
+async function addEmployee() { };
+async function updateEmployeeRole() { };
 
 init();
