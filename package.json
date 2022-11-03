@@ -1,0 +1,26 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "A cli for managing an employee database",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuckySal/employee-tracker.git"
+  },
+  "author": "Brandon Hill",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LuckySal/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/LuckySal/employee-tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
