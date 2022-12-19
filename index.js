@@ -14,7 +14,7 @@ const db = mysql.createConnection(
   console.log("Database connection successful")
 );
 
-function init() {
+async function init() {
   let programEnd = false;
   do {
     programEnd = await selectOptions();
